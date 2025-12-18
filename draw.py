@@ -8,9 +8,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import rcParams
+import matplotlib.font_manager as fm
 
 # 设置中文字体支持
-rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans']
+# 尝试使用可用的中文字体，如果没有则降级到默认字体
+available_fonts = [f.name for f in fm.fontManager.ttflist]
+chinese_fonts = ['SimHei', 'Microsoft YaHei', 'STHeiti', 'WenQuanYi Micro Hei']
+selected_font = None
+for font in chinese_fonts:
+    if font in available_fonts:
+        selected_font = font
+        break
+
+if selected_font:
+    rcParams['font.sans-serif'] = [selected_font, 'DejaVu Sans']
+else:
+    rcParams['font.sans-serif'] = ['DejaVu Sans']
 rcParams['axes.unicode_minus'] = False
 
 
@@ -26,16 +39,18 @@ def draw_line_chart(x_data, y_data, title="折线图", xlabel="X轴", ylabel="Y�
         ylabel: Y轴标签
         filename: 保存的文件名
     """
-    plt.figure(figsize=(10, 6))
-    plt.plot(x_data, y_data, marker='o', linewidth=2)
-    plt.title(title, fontsize=16)
-    plt.xlabel(xlabel, fontsize=12)
-    plt.ylabel(ylabel, fontsize=12)
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
-    plt.close()
-    print(f"折线图已保存到: {filename}")
+    fig = plt.figure(figsize=(10, 6))
+    try:
+        plt.plot(x_data, y_data, marker='o', linewidth=2)
+        plt.title(title, fontsize=16)
+        plt.xlabel(xlabel, fontsize=12)
+        plt.ylabel(ylabel, fontsize=12)
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        print(f"折线图已保存到: {filename}")
+    finally:
+        plt.close(fig)
 
 
 def draw_bar_chart(categories, values, title="柱状图", xlabel="类别", ylabel="数值", filename="bar_chart.png"):
@@ -50,17 +65,19 @@ def draw_bar_chart(categories, values, title="柱状图", xlabel="类别", ylabe
         ylabel: Y轴标签
         filename: 保存的文件名
     """
-    plt.figure(figsize=(10, 6))
-    plt.bar(categories, values, color='skyblue', edgecolor='navy', alpha=0.7)
-    plt.title(title, fontsize=16)
-    plt.xlabel(xlabel, fontsize=12)
-    plt.ylabel(ylabel, fontsize=12)
-    plt.xticks(rotation=45, ha='right')
-    plt.grid(True, alpha=0.3, axis='y')
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
-    plt.close()
-    print(f"柱状图已保存到: {filename}")
+    fig = plt.figure(figsize=(10, 6))
+    try:
+        plt.bar(categories, values, color='skyblue', edgecolor='navy', alpha=0.7)
+        plt.title(title, fontsize=16)
+        plt.xlabel(xlabel, fontsize=12)
+        plt.ylabel(ylabel, fontsize=12)
+        plt.xticks(rotation=45, ha='right')
+        plt.grid(True, alpha=0.3, axis='y')
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        print(f"柱状图已保存到: {filename}")
+    finally:
+        plt.close(fig)
 
 
 def draw_pie_chart(labels, sizes, title="饼图", filename="pie_chart.png"):
@@ -73,15 +90,17 @@ def draw_pie_chart(labels, sizes, title="饼图", filename="pie_chart.png"):
         title: 图表标题
         filename: 保存的文件名
     """
-    plt.figure(figsize=(10, 8))
-    colors = plt.cm.Set3(range(len(labels)))
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-    plt.title(title, fontsize=16)
-    plt.axis('equal')
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
-    plt.close()
-    print(f"饼图已保存到: {filename}")
+    fig = plt.figure(figsize=(10, 8))
+    try:
+        colors = plt.cm.Set3(range(len(labels)))
+        plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
+        plt.title(title, fontsize=16)
+        plt.axis('equal')
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        print(f"饼图已保存到: {filename}")
+    finally:
+        plt.close(fig)
 
 
 def draw_scatter_plot(x_data, y_data, title="散点图", xlabel="X轴", ylabel="Y轴", filename="scatter_plot.png"):
@@ -96,16 +115,18 @@ def draw_scatter_plot(x_data, y_data, title="散点图", xlabel="X轴", ylabel="
         ylabel: Y轴标签
         filename: 保存的文件名
     """
-    plt.figure(figsize=(10, 6))
-    plt.scatter(x_data, y_data, c='coral', s=100, alpha=0.6, edgecolors='black')
-    plt.title(title, fontsize=16)
-    plt.xlabel(xlabel, fontsize=12)
-    plt.ylabel(ylabel, fontsize=12)
-    plt.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
-    plt.close()
-    print(f"散点图已保存到: {filename}")
+    fig = plt.figure(figsize=(10, 6))
+    try:
+        plt.scatter(x_data, y_data, c='coral', s=100, alpha=0.6, edgecolors='black')
+        plt.title(title, fontsize=16)
+        plt.xlabel(xlabel, fontsize=12)
+        plt.ylabel(ylabel, fontsize=12)
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        print(f"散点图已保存到: {filename}")
+    finally:
+        plt.close(fig)
 
 
 if __name__ == "__main__":
